@@ -16,10 +16,14 @@ app.use(config_1.VERSION_1_0 + "/auth", f1_auth_1.default);
 // ping endpoint
 app.use(config_1.VERSION_1_0 + "/ping", (req, res) => {
     // save statistic
+    const backTime = new Date().getTime();
+    const frontTime = req.body.frontTime || backTime;
+    const ping = backTime - frontTime;
+    debug_1.log("!!! PING: ", ping);
     res.status(200).json({
-        ping: "ok",
-        backTime: new Date().toString(),
-        frontTime: req.body.frontTime,
+        ping,
+        backTime,
+        frontTime,
         info: "please send me you time —ฅ/ᐠ.̫ .ᐟ\\ฅ—",
     });
 });
