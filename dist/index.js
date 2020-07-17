@@ -15,10 +15,11 @@ app_1.appUse(app);
 app.use(config_1.VERSION_1_0 + "/auth", f1_auth_1.default);
 // ping endpoint
 app.use(config_1.VERSION_1_0 + "/ping", (req, res) => {
-    // wants front time
+    // save statistic
     res.status(200).json({
         ping: "ok",
-        serverTime: new Date().toString(),
+        backTime: new Date().toString(),
+        frontTime: req.body.frontTime,
         info: "please send me you time —ฅ/ᐠ.̫ .ᐟ\\ฅ—",
     });
 });

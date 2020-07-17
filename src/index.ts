@@ -15,10 +15,12 @@ app.use(VERSION_1_0 + "/auth", auth);
 
 // ping endpoint
 app.use(VERSION_1_0 + "/ping", (req: Request, res: Response) => {
-    // wants front time
+    // save statistic
+
     res.status(200).json({
         ping: "ok",
-        serverTime: new Date().toString(),
+        backTime: new Date().toString(),
+        frontTime: req.body.frontTime,
         info: "please send me you time —ฅ/ᐠ.̫ .ᐟ\\ฅ—", // https://cutekaomoji.com/animals/cats/
     })
 });
