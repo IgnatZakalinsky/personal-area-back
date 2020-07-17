@@ -10,7 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logIn = void 0;
+const errors_1 = require("../../../p1-common/c1-errors/errors");
 exports.logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.body.token) {
+        if (req.body.token.charAt(1) === "4")
+            errors_1.status400(res, "test 400", "login");
+        if (req.body.token.charAt(1) === "5")
+            errors_1.status500(res, { message: "test 400" }, "login");
+        else
+            res.status(200).json({ token: "ok" });
+        return;
+    }
     res.status(200).json({ test: "ok" });
 });
 //# sourceMappingURL=logIn.js.map
