@@ -16,7 +16,7 @@ exports.logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (req.body.token.charAt(1) === "4")
             errors_1.status400(res, "test 400", "login");
         if (req.body.token.charAt(1) === "5")
-            errors_1.status500(res, { message: "test 400" }, "login");
+            errors_1.status500(res, { message: "test 500" }, "login");
         else
             res.status(200).json({ token: "ok" });
         return;
