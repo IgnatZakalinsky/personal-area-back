@@ -18,6 +18,6 @@ export const status400 = (res: Response, e: string, inTry: string) => {
         in: inTry, // where was error
         info: "Check your request! /ᐠ-ꞈ-ᐟ\\"
     };
-    console.log("!!! Error 400: ", error);
+    log("!!! Error 400: ", error);
     res.status(400).json(error)
 };
