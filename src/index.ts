@@ -1,6 +1,6 @@
 import express, {Request, Response} from "express";
 import mongoose from "mongoose";
-import { log } from "./p1-common/c0-debug/debug";
+import {log} from "./p1-common/c0-debug/debug";
 import {MONGO_DB_URIS, VERSION_1_0} from "./p0-config/config";
 import {appUse} from "./p2-main/app";
 import auth from "./p3-features/f1-auth";

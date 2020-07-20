@@ -19,7 +19,7 @@ exports.status400 = (res, e, inTry) => {
         in: inTry,
         info: "Check your request! /ᐠ-ꞈ-ᐟ\\"
     };
-    console.log("!!! Error 400: ", error);
+    debug_1.log("!!! Error 400: ", error);
     res.status(400).json(error);
 };
 //# sourceMappingURL=errors.js.map
