@@ -16,10 +16,10 @@ export const appUse = (app: Express) => {
     // log middleware
     app.use((req: Request, res: Response, next: NextFunction) => {
         log("Time: ", new Date().toString());
-        log(req.method, req.url, "params: ", req.params);
-        log("query:", req.query);
-        log("body:", req.body);
-        log("cookies:", req.cookies);
+        console.log("-----", req.method, req.url, "params: ", req.params); // need log always
+        console.log("query:", req.query); // need log always
+        console.log("body:", req.body); // need log always
+        console.log("cookies:", req.cookies); // need log always
         // log("headers:", req.headers);
         // log("rawHeaders:", req.rawHeaders);
         next();

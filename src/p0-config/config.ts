@@ -4,6 +4,6 @@ const MONGO_DB_URL = process.env.MONGO_DB_URL || "neko0-iwojt.mongodb.net/nekobd
 
 export const MONGO_DB_URIS = `mongodb+srv://${USER_NAME}:${PASSWORD}@${MONGO_DB_URL}?retryWrites=true&w=majority`;
 
-export const IS_DEVELOPER_VERSION = true;
+export const IS_DEVELOPER_VERSION = false;
 
 export const VERSION_1_0 = "/1.0";

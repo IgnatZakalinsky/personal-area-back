@@ -18,10 +18,10 @@ exports.appUse = (app) => {
     // log middleware
     app.use((req, res, next) => {
         debug_1.log("Time: ", new Date().toString());
-        debug_1.log(req.method, req.url, "params: ", req.params);
-        debug_1.log("query:", req.query);
-        debug_1.log("body:", req.body);
-        debug_1.log("cookies:", req.cookies);
+        console.log("-----", req.method, req.url, "params: ", req.params); // need log always
+        console.log("query:", req.query); // need log always
+        console.log("body:", req.body); // need log always
+        console.log("cookies:", req.cookies); // need log always
         // log("headers:", req.headers);
         // log("rawHeaders:", req.rawHeaders);
         next();
