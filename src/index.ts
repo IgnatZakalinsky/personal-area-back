@@ -20,7 +20,11 @@ app.use(VERSION_1_0 + "/ping", (req: Request, res: Response) => {
     const ping = backTime - frontTime;
     console.warn("!!! PING: ", ping); // need log always
 
-    res.status(200).json({
+    res.cookie('token', "test token", {
+        expires: new Date(Date.now() + 8640000),
+        secure: false, // set to true if your using https
+        httpOnly: true,
+    }).status(200).json({
         ping,
         backTime,
         frontTime,
