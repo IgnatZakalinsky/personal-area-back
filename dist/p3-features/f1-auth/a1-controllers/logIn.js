@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.logIn = void 0;
 const errors_1 = require("../../../p1-common/c1-errors/errors");
 exports.logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('cookie', req.cookies.token);
     if (req.body.token) {
         if (req.body.token.charAt(1) === "4")
             errors_1.status400(res, "test 400", "login");
