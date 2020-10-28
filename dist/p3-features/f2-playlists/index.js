@@ -4,8 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const logIn_1 = require("./a1-controllers/logIn");
-const auth = express_1.default.Router();
-auth.post('/login', logIn_1.logIn);
-exports.default = auth;
+const playlists = express_1.default.Router();
+playlists.post('/', () => { });
+exports.default = playlists;
 //# sourceMappingURL=index.js.map
