@@ -1,8 +1,9 @@
 import {IS_DEVELOPER_VERSION} from '../../p0-config/config'
 import {Response} from 'express'
 
-export const status500 = (res: Response, e: any, inTry: string) => {
+export const status500 = (res: Response, e: any, inTry: string, more?: any) => {
     const error = {
+        more,
         error: 'some error: ' + e.message,
         errorObject: IS_DEVELOPER_VERSION && {...e},
         in: inTry, // where was error
@@ -11,8 +12,9 @@ export const status500 = (res: Response, e: any, inTry: string) => {
     console.error('!!! Error 500: ', error, {...e}) // need log always
     res.status(500).json(error)
 };
-export const status400 = (res: Response, e: string, inTry: string) => {
+export const status400 = (res: Response, e: string, inTry: string, more?: any) => {
     const error = {
+        more,
         error: e,
         in: inTry, // where was error
         info: 'Check your request! /ᐠ-ꞈ-ᐟ\\',

@@ -8,6 +8,7 @@ export const PLAYLIST_TAG = {
 export interface IPlaylist extends Document {
     _id: mongoose.Types.ObjectId
 
+    name: string
     levelAccess: number
     tags: string[]
     // position number
@@ -19,12 +20,23 @@ export interface IPlaylist extends Document {
     // _doc: object // crutch
 }
 
+export type PlaylistType = {
+    name: string
+    levelAccess: number
+    tags: string[]
+}
+
 const Playlist: Schema = new Schema(
     {
+        name: {
+            type: String,
+            required: true,
+        },
         levelAccess: {
             type: Number,
             required: true,
         },
+
         tags: [{
             type: String,
         }],

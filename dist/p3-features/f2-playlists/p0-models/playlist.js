@@ -25,6 +25,10 @@ exports.PLAYLIST_TAG = {
     TODOLIST: 'todolist',
 };
 const Playlist = new mongoose_1.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
     levelAccess: {
         type: Number,
         required: true,
