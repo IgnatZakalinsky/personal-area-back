@@ -23,8 +23,8 @@ mongoose_1.default.connect(config_1.MONGO_DB_URIS, {
         console.log('personal-area-back listening on port: ' + process.env.PORT); // need log always
     });
 })
-    .catch(e => console.error('!!! MongoDB connection error: ', e)); // need log always
+    .catch(e => console.log('!!! MongoDB connection error: ', e)); // need log always
 process.on('unhandledRejection', (reason, p) => {
-    console.error('!!! UnhandledRejection: ', reason, p); // need log always
+    console.log('!!! UnhandledRejection: ', reason, p); // need log always
 });
 //# sourceMappingURL=index.js.map

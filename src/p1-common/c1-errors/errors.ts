@@ -1,6 +1,12 @@
 import {IS_DEVELOPER_VERSION} from '../../p0-config/config'
 import {Response} from 'express'
 
+export type ErrorType = {
+    e: any,
+    inTry: string,
+    more?: any,
+}
+
 export const status500 = (res: Response, e: any, inTry: string, more?: any) => {
     const error = {
         more,

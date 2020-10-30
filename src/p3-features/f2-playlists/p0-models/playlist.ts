@@ -26,6 +26,8 @@ export type PlaylistType = {
     tags: string[]
 }
 
+// new Schema for object
+
 const Playlist: Schema = new Schema(
     {
         name: {
@@ -39,6 +41,7 @@ const Playlist: Schema = new Schema(
 
         tags: [{
             type: String,
+            // type: [String],
         }],
 
     },

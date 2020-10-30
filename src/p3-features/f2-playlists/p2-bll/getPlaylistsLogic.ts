@@ -1,32 +1,48 @@
 import {readPlaylists} from '../p3-dal/readPlaylists'
 import {countPlaylists} from '../p3-dal/countPlaylists'
+import { AnswerType } from '../p1-controllers/getPlaylist'
 
 export const getPlaylistsLogic = () => {
-    // const sortName: string = (sortPacksF && sortPacksF.length > 2) ? sortPacksF.slice(1) : ''
-    const sortName: string = ''
-    // const direction = sortName ? (sortPacksF[0] === '0' ? -1 : 1) : undefined
-    const direction = undefined
-    const sort = sortName ? {[sortName]: direction} : {updated: -1}
+    return new Promise<AnswerType>(async res => {
 
-    const findBase = {
-        name: new RegExp('', 'gi'),
-        // cardsCount: {$gte: min && +min || minF, $lte: max && +max || maxF},
-    };
-    // const findPrivate = user_idF && user._id.equals(user_idF) ? {} : {private: false}
-    // const findByUserId = user_id ? {user_id: user_idF} : {}
+        // const sortName: string = (sortPacksF && sortPacksF.length > 2) ? sortPacksF.slice(1) : ''
+        const sortName: string = ''
+        // const direction = sortName ? (sortPacksF[0] === '0' ? -1 : 1) : undefined
+        const direction = undefined
+        const sort = sortName ? {[sortName]: direction} : {updated: -1}
 
-    const find = {
-        // ...findByUserId,
-        ...findBase,
-        // ...findPrivate,
-    }
+        const findBase = {
+            name: new RegExp('', 'gi'),
+            // cardsCount: {$gte: min && +min || minF, $lte: max && +max || maxF},
+        };
+        // const findPrivate = user_idF && user._id.equals(user_idF) ? {} : {private: false}
+        // const findByUserId = user_id ? {user_id: user_idF} : {}
 
-    return countPlaylists(find)
-        .then(playlistsTotalCount => {
-            // if (itemForPageCount * (pageNumber - 1) > cardPacksTotalCount) pageNumber = 1
+        const find = {
+            // ...findByUserId,
+            ...findBase,
+            // ...findPrivate,
+        }
 
-            return readPlaylists(find, sort)
-                .then(playlists => ({playlists, playlistsTotalCount}))
-        })
+        try {
+            const playlistsTotalCount = await countPlaylists(find)
 
+            try {
+                const playlists = await readPlaylists(find, sort)
+                res({type: 200, playlists, playlistsTotalCount})
+
+            } catch (e) {
+                res({
+                    type: 500,
+                    error: {e, inTry: 'getPlaylists/readPlaylists', more: {find, sort, playlistsTotalCount}},
+                })
+            }
+
+        } catch (e) {
+            res({
+                type: 500,
+                error: {e, inTry: 'getPlaylists/countPlaylists', more: {find}},
+            })
+        }
+    })
 }

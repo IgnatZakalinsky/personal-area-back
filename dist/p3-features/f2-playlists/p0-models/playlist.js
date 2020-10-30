@@ -24,6 +24,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 exports.PLAYLIST_TAG = {
     TODOLIST: 'todolist',
 };
+// new Schema for object
 const Playlist = new mongoose_1.Schema({
     name: {
         type: String,
