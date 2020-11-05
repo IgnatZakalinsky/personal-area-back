@@ -9,32 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.putPlaylist = void 0;
+exports.putMapItem = void 0;
 const errors_1 = require("../../../p1-common/c1-errors/errors");
-const putPlaylistLogic_1 = require("../p2-bll/putPlaylistLogic");
-exports.putPlaylist = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { playlist } = req.body;
-    if (!playlist)
-        errors_1.status400(res, 'No playlist in body! /ᐠ-ꞈ-ᐟ\\', 'putPlaylist', { body: req.body });
-    if (!playlist._id)
-        errors_1.status400(res, 'No _id in playlist! /ᐠ-ꞈ-ᐟ\\', 'putPlaylist', { body: req.body });
+const putMapItemLogic_1 = require("../p2-bll/putMapItemLogic");
+exports.putMapItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { mapItem } = req.body;
+    if (!mapItem)
+        errors_1.status400(res, 'No mapItem in body! /ᐠ-ꞈ-ᐟ\\', 'putMapItem', { body: req.body });
+    if (!mapItem._id)
+        errors_1.status400(res, 'No _id in mapItem! /ᐠ-ꞈ-ᐟ\\', 'putMapItem', { body: req.body });
     else {
-        const checkedPlaylist = {
-            name: !playlist.name ? '' : String(playlist.name),
-            levelAccess: (playlist.levelAccess === 0 || playlist.levelAccess === '0')
+        const checkedMapItem = {
+            name: !mapItem.name ? 'no Name' : String(mapItem.name),
+            type: !mapItem.type ? 'no Type' : String(mapItem.type),
+            lat: (mapItem.lat === 0 || mapItem.lat === '0')
                 ? 0
-                : !playlist.levelAccess
-                    ? NaN
-                    : (+playlist.levelAccess || NaN),
-            tags: (!playlist.tags || playlist.tags.constructor !== Array)
-                ? [''] // нельзя добавлять '' тег
-                : playlist.tags.map((t) => String(t)),
+                : !mapItem.lat
+                    ? 100000
+                    : (+mapItem.lat || 100000),
+            lng: (mapItem.lng === 0 || mapItem.lng === '0')
+                ? 0
+                : !mapItem.lng
+                    ? 100000
+                    : (+mapItem.lng || 100000),
+            JSONData: !mapItem.JSONData ? '{}' : String(mapItem.JSONData),
         };
-        putPlaylistLogic_1.putPlaylistLogic(String(playlist._id), checkedPlaylist)
+        putMapItemLogic_1.putMapItemLogic(String(mapItem._id), checkedMapItem)
             .then((answer) => {
             switch (answer.type) {
                 case 200: {
-                    res.status(200).json({ updatedPlaylist: answer.updatedPlaylist });
+                    res.status(200).json({ updatedPlaylist: answer.updatedMapItem });
                     break;
                 }
                 case 500: {
@@ -47,7 +51,7 @@ exports.putPlaylist = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 }
             }
         })
-            .catch(e => errors_1.status500(res, e, 'putPlaylist', { body: req.body, checkedPlaylist }));
+            .catch(e => errors_1.status500(res, e, 'putMapItem', { body: req.body, checkedMapItem }));
     }
 });
-//# sourceMappingURL=putPlaylist.js.map
+//# sourceMappingURL=putMapItem.js.map

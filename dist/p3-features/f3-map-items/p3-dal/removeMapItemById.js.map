@@ -1,0 +1,1 @@
+{"version":3,"file":"removeMapItemById.js","sourceRoot":"","sources":["../../../../src/p3-features/f3-map-items/p3-dal/removeMapItemById.ts"],"names":[],"mappings":";;;;;;AAAA,mEAA0C;AAE7B,QAAA,iBAAiB,GAAG,CAAC,EAAU,EAAE,EAAE;IAE5C,OAAO,iBAAO,CAAC,iBAAiB,CAAC,EAAE,CAAC;SAC/B,IAAI,EAAE,CAAA;AACf,CAAC,CAAA"}

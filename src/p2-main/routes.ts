@@ -2,10 +2,12 @@ import {Express, Request, Response} from 'express'
 import {VERSION_1_0} from '../p0-config/config'
 import auth from '../p3-features/f1-auth'
 import playlists from '../p3-features/f2-playlists'
+import mapItems from '../p3-features/f3-map-items'
 
 export const routes = (app: Express) => {
     app.use(VERSION_1_0 + '/auth', auth)
     app.use(VERSION_1_0 + '/playlists', playlists)
+    app.use(VERSION_1_0 + '/map-items', mapItems)
 
 
     // ping endpoint

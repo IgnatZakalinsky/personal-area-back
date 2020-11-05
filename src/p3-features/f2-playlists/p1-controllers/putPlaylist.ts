@@ -10,9 +10,9 @@ export const putPlaylist = async (req: Request, res: Response) => {
     const {playlist} = req.body;
 
     if (!playlist)
-        status400(res, 'No playlist in body! /ᐠ-ꞈ-ᐟ\\', 'addPlaylist', {body: req.body})
+        status400(res, 'No playlist in body! /ᐠ-ꞈ-ᐟ\\', 'putPlaylist', {body: req.body})
     if (!playlist._id)
-        status400(res, 'No _id in playlist! /ᐠ-ꞈ-ᐟ\\', 'addPlaylist', {body: req.body})
+        status400(res, 'No _id in playlist! /ᐠ-ꞈ-ᐟ\\', 'putPlaylist', {body: req.body})
 
     else {
         const checkedPlaylist: PlaylistType = {
