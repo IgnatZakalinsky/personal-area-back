@@ -16,19 +16,19 @@ export const putMapItem = async (req: Request, res: Response) => {
 
     else {
         const checkedMapItem: MapItemType = {
-            name: !mapItem.name ? 'no Name' : String(mapItem.name),
-            type: !mapItem.type ? 'no Type' : String(mapItem.type),
+            name: !mapItem.name ? '' : String(mapItem.name),
+            type: !mapItem.type ? '' : String(mapItem.type),
             lat: (mapItem.lat === 0 || mapItem.lat === '0')
                 ? 0
                 : !mapItem.lat
-                    ? 100000
-                    : (+mapItem.lat || 100000),
+                    ? NaN
+                    : ((+mapItem.lat && mapItem.lat >= -90 && mapItem.lat <= 90) ? +mapItem.lat : NaN),
             lng: (mapItem.lng === 0 || mapItem.lng === '0')
                 ? 0
                 : !mapItem.lng
-                    ? 100000
-                    : (+mapItem.lng || 100000),
-            JSONData: !mapItem.JSONData ? '{}' : String(mapItem.JSONData),
+                    ? NaN
+                    : ((+mapItem.lng && mapItem.lng >= -180 && mapItem.lng <= 180) ? +mapItem.lng : NaN),
+            JSONData: !mapItem.JSONData ? '' : String(mapItem.JSONData),
         }
 
         putMapItemLogic(String(mapItem._id), checkedMapItem)

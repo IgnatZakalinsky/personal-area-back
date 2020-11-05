@@ -22,14 +22,14 @@ exports.addMapItem = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             type: !mapItem.type ? 'no Type' : String(mapItem.type),
             lat: (mapItem.lat === 0 || mapItem.lat === '0')
                 ? 0
-                : !mapItem.lat || mapItem.lat < -90 || mapItem.lat > 90
+                : !mapItem.lat
                     ? 53.53
-                    : (+mapItem.lat || 53.53),
+                    : ((+mapItem.lat && mapItem.lat >= -90 && mapItem.lat <= 90) ? +mapItem.lat : 53.53),
             lng: (mapItem.lng === 0 || mapItem.lng === '0')
                 ? 0
-                : !mapItem.lng || mapItem.lng < -180 || mapItem.lng > 180
+                : !mapItem.lng
                     ? 27.34
-                    : (+mapItem.lng || 27.34),
+                    : ((+mapItem.lng && mapItem.lng >= -180 && mapItem.lng <= 180) ? +mapItem.lng : 27.34),
             JSONData: !mapItem.JSONData ? '{}' : String(mapItem.JSONData),
         };
         addMapItemLogic_1.addMapItemLogic(checkedMapItem)

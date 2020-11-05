@@ -20,19 +20,19 @@ exports.putMapItem = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         errors_1.status400(res, 'No _id in mapItem! /ᐠ-ꞈ-ᐟ\\', 'putMapItem', { body: req.body });
     else {
         const checkedMapItem = {
-            name: !mapItem.name ? 'no Name' : String(mapItem.name),
-            type: !mapItem.type ? 'no Type' : String(mapItem.type),
+            name: !mapItem.name ? '' : String(mapItem.name),
+            type: !mapItem.type ? '' : String(mapItem.type),
             lat: (mapItem.lat === 0 || mapItem.lat === '0')
                 ? 0
                 : !mapItem.lat
-                    ? 100000
-                    : (+mapItem.lat || 100000),
+                    ? NaN
+                    : ((+mapItem.lat && mapItem.lat >= -90 && mapItem.lat <= 90) ? +mapItem.lat : NaN),
             lng: (mapItem.lng === 0 || mapItem.lng === '0')
                 ? 0
                 : !mapItem.lng
-                    ? 100000
-                    : (+mapItem.lng || 100000),
-            JSONData: !mapItem.JSONData ? '{}' : String(mapItem.JSONData),
+                    ? NaN
+                    : ((+mapItem.lng && mapItem.lng >= -180 && mapItem.lng <= 180) ? +mapItem.lng : NaN),
+            JSONData: !mapItem.JSONData ? '' : String(mapItem.JSONData),
         };
         putMapItemLogic_1.putMapItemLogic(String(mapItem._id), checkedMapItem)
             .then((answer) => {
