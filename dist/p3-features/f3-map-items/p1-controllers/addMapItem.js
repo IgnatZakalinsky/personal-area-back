@@ -23,13 +23,13 @@ exports.addMapItem = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             lat: (mapItem.lat === 0 || mapItem.lat === '0')
                 ? 0
                 : !mapItem.lat
-                    ? 100000
-                    : (+mapItem.lat || 100000),
+                    ? 53.53
+                    : (+mapItem.lat || 53.53),
             lng: (mapItem.lng === 0 || mapItem.lng === '0')
                 ? 0
                 : !mapItem.lng
-                    ? 100000
-                    : (+mapItem.lng || 100000),
+                    ? 27.34
+                    : (+mapItem.lng || 27.34),
             JSONData: !mapItem.JSONData ? '{}' : String(mapItem.JSONData),
         };
         addMapItemLogic_1.addMapItemLogic(checkedMapItem)
