@@ -1,4 +1,4 @@
-import mongoose, {Schema, Document} from 'mongoose'
+import mongoose, {Schema, Document, Model} from 'mongoose'
 
 export const PLAYLIST_TAG = {
     TODOLIST: 'todolist',
@@ -28,7 +28,7 @@ export type PlaylistType = {
 
 // new Schema for object
 
-const Playlist: Schema = new Schema(
+const PlaylistSchema: Schema = new Schema(
     {
         name: {
             type: String,
@@ -54,4 +54,6 @@ const Playlist: Schema = new Schema(
     }
 )
 
-export default mongoose.model<IPlaylist>('ii-test-playlist', Playlist)
+export const Playlist: Model<IPlaylist> = mongoose.model<IPlaylist>('ii-test-playlist', PlaylistSchema)
+
+export default Playlist

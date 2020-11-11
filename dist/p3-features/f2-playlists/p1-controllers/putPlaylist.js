@@ -11,7 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.putPlaylist = void 0;
 const errors_1 = require("../../../p1-common/c1-errors/errors");
-const putPlaylistLogic_1 = require("../p2-bll/putPlaylistLogic");
+const index_1 = require("./index");
+const Checker_1 = require("../../../p1-common/c2-validators/Checker");
 exports.putPlaylist = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { playlist } = req.body;
     if (!playlist)
@@ -20,34 +21,11 @@ exports.putPlaylist = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         errors_1.status400(res, 'No _id in playlist! /ᐠ-ꞈ-ᐟ\\', 'putPlaylist', { body: req.body });
     else {
         const checkedPlaylist = {
-            name: !playlist.name ? '' : String(playlist.name),
-            levelAccess: (playlist.levelAccess === 0 || playlist.levelAccess === '0')
-                ? 0
-                : !playlist.levelAccess
-                    ? NaN
-                    : (+playlist.levelAccess || NaN),
-            tags: (!playlist.tags || playlist.tags.constructor !== Array)
-                ? [''] // нельзя добавлять '' тег
-                : playlist.tags.map((t) => String(t)),
+            name: Checker_1.Checker.string(playlist.name, undefined),
+            levelAccess: Checker_1.Checker.number(playlist.levelAccess, NaN),
+            tags: Checker_1.Checker.arrayString(playlist.tags, ['']),
         };
-        putPlaylistLogic_1.putPlaylistLogic(String(playlist._id), checkedPlaylist)
-            .then((answer) => {
-            switch (answer.type) {
-                case 200: {
-                    res.status(200).json({ updatedPlaylist: answer.updatedPlaylist });
-                    break;
-                }
-                case 500: {
-                    errors_1.status500(res, answer.error.e, answer.error.inTry, answer.error.more);
-                    break;
-                }
-                case 400: {
-                    errors_1.status400(res, answer.error.e, answer.error.inTry, answer.error.more);
-                    break;
-                }
-            }
-        })
-            .catch(e => errors_1.status500(res, e, 'putPlaylist', { body: req.body, checkedPlaylist }));
+        index_1.PlaylistController.updateItem(req, res, playlist._id, checkedPlaylist);
     }
 });
 //# sourceMappingURL=putPlaylist.js.map

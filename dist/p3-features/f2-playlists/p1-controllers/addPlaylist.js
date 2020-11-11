@@ -11,28 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addPlaylist = void 0;
 const errors_1 = require("../../../p1-common/c1-errors/errors");
-const addPlaylistLogic_1 = require("../p2-bll/addPlaylistLogic");
+const index_1 = require("./index");
+const Checker_1 = require("../../../p1-common/c2-validators/Checker");
 exports.addPlaylist = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { playlist } = req.body;
     if (!playlist)
         errors_1.status400(res, 'No playlist in body! /ᐠ-ꞈ-ᐟ\\', 'addPlaylist', { body: req.body });
     else {
         const checkedPlaylist = {
-            name: !playlist.name ? 'no Name' : String(playlist.name),
-            levelAccess: (playlist.levelAccess === 0 || playlist.levelAccess === '0')
-                ? 0
-                : !playlist.levelAccess
-                    ? 100000
-                    : (+playlist.levelAccess || 100000),
-            tags: (!playlist.tags || playlist.tags.constructor !== Array)
-                ? []
-                : playlist.tags.map((t) => String(t)),
+            name: Checker_1.Checker.string(playlist.name, 'no Name'),
+            levelAccess: Checker_1.Checker.number(playlist.levelAccess, 100000),
+            tags: Checker_1.Checker.arrayString(playlist.tags, []),
         };
-        addPlaylistLogic_1.addPlaylistLogic(checkedPlaylist)
-            .then(addedPlaylist => {
-            res.status(201).json({ addedPlaylist });
-        })
-            .catch(e => errors_1.status500(res, e, 'addPlaylist/createPlaylist', { body: req.body, checkedPlaylist }));
+        index_1.PlaylistController.addItem(req, res, checkedPlaylist);
     }
 });
 //# sourceMappingURL=addPlaylist.js.map

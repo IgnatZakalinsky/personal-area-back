@@ -19,13 +19,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PLAYLIST_TAG = void 0;
+exports.Playlist = exports.PLAYLIST_TAG = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 exports.PLAYLIST_TAG = {
     TODOLIST: 'todolist',
 };
 // new Schema for object
-const Playlist = new mongoose_1.Schema({
+const PlaylistSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,
@@ -43,5 +43,6 @@ const Playlist = new mongoose_1.Schema({
         updatedAt: 'updated',
     },
 });
-exports.default = mongoose_1.default.model('ii-test-playlist', Playlist);
+exports.Playlist = mongoose_1.default.model('ii-test-playlist', PlaylistSchema);
+exports.default = exports.Playlist;
 //# sourceMappingURL=playlist.js.map

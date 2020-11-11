@@ -1,35 +1,25 @@
 import {Request, Response} from 'express'
-import {getPlaylistsLogic} from '../p2-bll/getPlaylistsLogic'
-import {ErrorType, status400, status500} from '../../../p1-common/c1-errors/errors'
-import {IPlaylist} from '../p0-models/playlist'
-
-export type AnswerType = {
-        type: 200,
-        playlists: Pick<IPlaylist, "_id" | "name" | "levelAccess" | "tags" | "created" | "updated">[],
-        playlistsTotalCount: number
-    } | { type: 400 | 500, error: ErrorType }
+import {PlaylistController} from './index'
 
 export const getPlaylists = (req: Request, res: Response) => {
+    // const sortName: string = (sortPacksF && sortPacksF.length > 2) ? sortPacksF.slice(1) : ''
+    const sortName: string = ''
+    // const direction = sortName ? (sortPacksF[0] === '0' ? -1 : 1) : undefined
+    const direction = undefined
+    const sort = sortName ? {[sortName]: direction} : {updated: -1}
 
-    getPlaylistsLogic()
-        .then(answer => {
-            switch (answer.type) {
-                case 200: {
-                    res.status(200).json({
-                        playlists: answer.playlists,
-                        playlistsTotalCount: answer.playlistsTotalCount
-                    })
-                    break
-                }
-                case 500: {
-                    status500(res, answer.error.e, answer.error.inTry, answer.error.more)
-                    break
-                }
-                case 400: {
-                    status400(res, answer.error.e, answer.error.inTry, answer.error.more)
-                    break
-                }
-            }
-        })
-        .catch(e => status500(res, e, 'getPlaylists'))
+    const findBase = {
+        name: new RegExp('', 'gi'),
+        // cardsCount: {$gte: min && +min || minF, $lte: max && +max || maxF},
+    };
+    // const findPrivate = user_idF && user._id.equals(user_idF) ? {} : {private: false}
+    // const findByUserId = user_id ? {user_id: user_idF} : {}
+
+    const find = {
+        // ...findByUserId,
+        ...findBase,
+        // ...findPrivate,
+    }
+
+    PlaylistController.getItems(req, res, find, sort)
 }

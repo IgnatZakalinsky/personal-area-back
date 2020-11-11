@@ -11,16 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePlaylist = void 0;
 const errors_1 = require("../../../p1-common/c1-errors/errors");
-const deletePlaylistLogic_1 = require("../p2-bll/deletePlaylistLogic");
+const p2_bll_1 = require("../p2-bll");
 exports.deletePlaylist = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     if (!id)
         errors_1.status400(res, 'No id in params! /ᐠ-ꞈ-ᐟ\\', 'deletePlaylist', { params: req.params });
-    deletePlaylistLogic_1.deletePlaylistLogic(id + '')
+    p2_bll_1.PlaylistLogic.deleteItem(id + '')
         .then((answer) => {
         switch (answer.type) {
             case 200: {
-                res.status(200).json({ deletedPlaylist: answer.deletedPlaylist });
+                res.status(200).json({ deletedPlaylist: answer.deletedItem });
                 break;
             }
             case 500: {

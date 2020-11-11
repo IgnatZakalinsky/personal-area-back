@@ -1,10 +1,7 @@
 import {Request, Response} from 'express'
-import {ErrorType, status400, status500} from '../../../p1-common/c1-errors/errors'
-import {IPlaylist, PlaylistType} from '../p0-models/playlist'
-import {putPlaylistLogic} from '../p2-bll/putPlaylistLogic'
-
-export type AnswerType = { type: 200, updatedPlaylist: IPlaylist | null}
-    | { type: 400 | 500, error: ErrorType}
+import {status400} from '../../../p1-common/c1-errors/errors'
+import {PlaylistController} from './index';
+import {Checker} from '../../../p1-common/c2-validators/Checker'
 
 export const putPlaylist = async (req: Request, res: Response) => {
     const {playlist} = req.body;
@@ -15,36 +12,12 @@ export const putPlaylist = async (req: Request, res: Response) => {
         status400(res, 'No _id in playlist! /ᐠ-ꞈ-ᐟ\\', 'putPlaylist', {body: req.body})
 
     else {
-        const checkedPlaylist: PlaylistType = {
-            name: !playlist.name ? '' : String(playlist.name),
-            levelAccess: (playlist.levelAccess === 0 || playlist.levelAccess === '0')
-                ? 0
-                : !playlist.levelAccess
-                    ? NaN
-                    : (+playlist.levelAccess || NaN),
-            tags: (!playlist.tags || playlist.tags.constructor !== Array)
-                ? [''] // нельзя добавлять '' тег
-                : playlist.tags.map((t: any) => String(t)),
-
+        const checkedPlaylist = {
+            name: Checker.string(playlist.name, undefined),
+            levelAccess: Checker.number(playlist.levelAccess, NaN),
+            tags: Checker.arrayString(playlist.tags, ['']),
         }
 
-        putPlaylistLogic(String(playlist._id), checkedPlaylist)
-            .then((answer) => {
-            switch (answer.type) {
-                case 200: {
-                    res.status(200).json({updatedPlaylist: answer.updatedPlaylist})
-                    break
-                }
-                case 500: {
-                    status500(res, answer.error.e, answer.error.inTry, answer.error.more)
-                    break
-                }
-                case 400: {
-                    status400(res, answer.error.e, answer.error.inTry, answer.error.more)
-                    break
-                }
-            }
-        })
-            .catch(e => status500(res, e, 'putPlaylist', {body: req.body, checkedPlaylist}))
+        PlaylistController.updateItem(req, res, playlist._id, checkedPlaylist)
     }
 }
