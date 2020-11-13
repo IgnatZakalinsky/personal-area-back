@@ -1,10 +1,10 @@
 export const Updater = {
-    string(item: string | undefined, oldItem: string) {
+    string(item: string | undefined, oldItem: string | undefined) {
         return (item === '')
             ? ''
             : !item ? oldItem : item
     },
-    number(item: number | undefined, oldItem: number) {
+    number(item: number, oldItem: number) {
         return (item === 0)
             ? 0
             : !item ? oldItem : item

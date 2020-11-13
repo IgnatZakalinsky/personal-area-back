@@ -4,7 +4,7 @@ export const Checker = {
             ? ''
             : !item ? def : item
     },
-    number(item: number | undefined, def: number) {
+    number(item: number, def: number) {
         return (item === 0)
             ? 0
             : !item ? def : item

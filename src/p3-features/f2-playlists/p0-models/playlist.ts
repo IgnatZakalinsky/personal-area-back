@@ -5,13 +5,19 @@ export const PLAYLIST_TAG = {
 
 }
 
+export const COURSE = {
+    REACT: 'React',
+
+}
+
 export interface IPlaylist extends Document {
     _id: mongoose.Types.ObjectId
 
     name: string
     levelAccess: number
     tags: string[]
-    // position number
+    // courseType: string
+    // position: number
     // start/end date access
 
     created: Date
@@ -21,7 +27,7 @@ export interface IPlaylist extends Document {
 }
 
 export type PlaylistType = {
-    name: string
+    name?: string
     levelAccess: number
     tags: string[]
 }

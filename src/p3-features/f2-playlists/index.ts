@@ -8,7 +8,7 @@ const playlists = express.Router()
 
 playlists.post('/', addPlaylist)
 playlists.get('/', getPlaylists)
-playlists.delete('/:id?', PlaylistController.deleteItem)
+playlists.delete('/:id?', PlaylistController.deleteItem.bind(PlaylistController))
 playlists.put('/', putPlaylist)
 
 
