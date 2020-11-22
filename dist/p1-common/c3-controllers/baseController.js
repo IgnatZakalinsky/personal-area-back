@@ -9,8 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.baseController = void 0;
+exports.baseController = exports.answerSwitch = void 0;
 const errors_1 = require("../c1-errors/errors");
+exports.answerSwitch = (res, answer, ok) => {
+    switch (answer.type) {
+        case 200: {
+            res.status(200).json(ok);
+            break;
+        }
+        case 500: {
+            errors_1.status500(res, answer.error.e, answer.error.inTry, answer.error.more);
+            break;
+        }
+        case 400: {
+            errors_1.status400(res, answer.error.e, answer.error.inTry, answer.error.more);
+            break;
+        }
+    }
+};
 exports.baseController = (Logic, name) => {
     return {
         _Logic: Logic,
@@ -20,22 +36,8 @@ exports.baseController = (Logic, name) => {
                 if (!id)
                     errors_1.status400(res, 'No id in params! /ᐠ-ꞈ-ᐟ\\', 'delete' + name, { params: req.params });
                 try {
-                    // this._Logic not worked
-                    const answer = yield Logic.deleteItem(id + '');
-                    switch (answer.type) {
-                        case 200: {
-                            res.status(200).json({ deletedItem: answer.deletedItem });
-                            break;
-                        }
-                        case 500: {
-                            errors_1.status500(res, answer.error.e, answer.error.inTry, answer.error.more);
-                            break;
-                        }
-                        case 400: {
-                            errors_1.status400(res, answer.error.e, answer.error.inTry, answer.error.more);
-                            break;
-                        }
-                    }
+                    const answer = yield this._Logic.deleteItem(id + '');
+                    exports.answerSwitch(res, answer, answer.type === 200 && { deletedItem: answer.deletedItem });
                 }
                 catch (e) {
                     errors_1.status500(res, e, 'delete' + name, { params: req.params });
@@ -45,24 +47,11 @@ exports.baseController = (Logic, name) => {
         getItems(req, res, find, sort) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const answer = yield Logic.getItems(find, sort);
-                    switch (answer.type) {
-                        case 200: {
-                            res.status(200).json({
-                                items: answer.items,
-                                itemsTotalCount: answer.itemsTotalCount
-                            });
-                            break;
-                        }
-                        case 500: {
-                            errors_1.status500(res, answer.error.e, answer.error.inTry, answer.error.more);
-                            break;
-                        }
-                        case 400: {
-                            errors_1.status400(res, answer.error.e, answer.error.inTry, answer.error.more);
-                            break;
-                        }
-                    }
+                    const answer = yield this._Logic.getItems(find, sort);
+                    exports.answerSwitch(res, answer, answer.type === 200 && {
+                        items: answer.items,
+                        itemsTotalCount: answer.itemsTotalCount
+                    });
                 }
                 catch (e) {
                     errors_1.status500(res, e, `get${name}s`);
@@ -72,7 +61,7 @@ exports.baseController = (Logic, name) => {
         addItem(req, res, checkedItem) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const addedItem = yield Logic.addItem(checkedItem);
+                    const addedItem = yield this._Logic.addItem(checkedItem);
                     res.status(201).json({ addedItem });
                 }
                 catch (e) {
@@ -83,21 +72,8 @@ exports.baseController = (Logic, name) => {
         updateItem(req, res, id, checkedItem) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const answer = yield Logic.putItem(String(id), checkedItem);
-                    switch (answer.type) {
-                        case 200: {
-                            res.status(200).json({ updatedPlaylist: answer.updatedItem });
-                            break;
-                        }
-                        case 500: {
-                            errors_1.status500(res, answer.error.e, answer.error.inTry, answer.error.more);
-                            break;
-                        }
-                        case 400: {
-                            errors_1.status400(res, answer.error.e, answer.error.inTry, answer.error.more);
-                            break;
-                        }
-                    }
+                    const answer = yield this._Logic.putItem(String(id), checkedItem);
+                    exports.answerSwitch(res, answer, answer.type === 200 && { updatedPlaylist: answer.updatedItem });
                 }
                 catch (e) {
                     errors_1.status500(res, e, 'put' + name, { body: req.body, checkedItem });

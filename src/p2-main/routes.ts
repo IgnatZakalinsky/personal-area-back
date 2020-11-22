@@ -3,10 +3,12 @@ import {VERSION_1_0} from '../p0-config/config'
 import auth from '../p3-features/f1-auth'
 import playlists from '../p3-features/f2-playlists'
 import mapItems from '../p3-features/f3-map-items'
+import playlists2 from '../p3-features/f2-playlists-v2'
 
 export const routes = (app: Express) => {
     app.use(VERSION_1_0 + '/auth', auth)
     app.use(VERSION_1_0 + '/playlists', playlists)
+    app.use(VERSION_1_0 + '/playlists2', playlists2)
     app.use(VERSION_1_0 + '/map-items', mapItems)
 
 
@@ -28,7 +30,7 @@ export const routes = (app: Express) => {
 
     // default
     app.use((req: Request, res: Response) => {
-        console.log('Nya-bad url: ', req.method, req.url)
+        console.log('bad url: ', req.method, req.url)
         res.status(404).json({
             error: 'bad url /ᐠ｡ꞈ｡ᐟ\\',
             method: req.method,

@@ -11,7 +11,7 @@ const p1_controllers_1 = require("./p1-controllers");
 const playlists = express_1.default.Router();
 playlists.post('/', addPlaylist_1.addPlaylist);
 playlists.get('/', getPlaylist_1.getPlaylists);
-playlists.delete('/:id?', p1_controllers_1.PlaylistController.deleteItem);
+playlists.delete('/:id?', p1_controllers_1.PlaylistController.deleteItem.bind(p1_controllers_1.PlaylistController));
 playlists.put('/', putPlaylist_1.putPlaylist);
 exports.default = playlists;
 //# sourceMappingURL=index.js.map

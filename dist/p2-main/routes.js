@@ -8,9 +8,11 @@ const config_1 = require("../p0-config/config");
 const f1_auth_1 = __importDefault(require("../p3-features/f1-auth"));
 const f2_playlists_1 = __importDefault(require("../p3-features/f2-playlists"));
 const f3_map_items_1 = __importDefault(require("../p3-features/f3-map-items"));
+const f2_playlists_v2_1 = __importDefault(require("../p3-features/f2-playlists-v2"));
 exports.routes = (app) => {
     app.use(config_1.VERSION_1_0 + '/auth', f1_auth_1.default);
     app.use(config_1.VERSION_1_0 + '/playlists', f2_playlists_1.default);
+    app.use(config_1.VERSION_1_0 + '/playlists2', f2_playlists_v2_1.default);
     app.use(config_1.VERSION_1_0 + '/map-items', f3_map_items_1.default);
     // ping endpoint
     app.use(config_1.VERSION_1_0 + '/ping', (req, res) => {
@@ -28,7 +30,7 @@ exports.routes = (app) => {
     });
     // default
     app.use((req, res) => {
-        console.log('Nya-bad url: ', req.method, req.url);
+        console.log('bad url: ', req.method, req.url);
         res.status(404).json({
             error: 'bad url /ᐠ｡ꞈ｡ᐟ\\',
             method: req.method,

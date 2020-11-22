@@ -19,19 +19,41 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Playlist = exports.COURSE = exports.PLAYLIST_TAG = void 0;
+exports.uniqueProperties = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-exports.PLAYLIST_TAG = {
-    TODOLIST: 'todolist',
-};
-exports.COURSE = {
-    REACT: 'React',
-};
+// type X = {
+//     a: 1
+//     b: 2
+//     c: 3
+//     d: 4
+// }
+// type Y = {
+//     b: 2
+//     c: 3
+//     d: 4
+//     e: 5
+//     f: 6
+// }
+// type Intersection<X, Y> = {
+//     [k in  keyof X & keyof Y]: Y[k]
+// }
+// type Z<X, Y> = {
+//     [k in Extract<keyof X, keyof Y>]: X[k]
+// }
+// const x: Z<X, Y> = {b: 2, c: 3, d: 4 }
+exports.uniqueProperties = ['name'];
+// export type UpdatePlaylistType = Partial<PlaylistType>
+// export type UpdatePlaylistType = {
+//     name?: string
+//     levelAccess?: number
+//     tags?: string[]
+// }
 // new Schema for object
 const PlaylistSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,
+        unique: true,
     },
     levelAccess: {
         type: Number,
@@ -46,6 +68,6 @@ const PlaylistSchema = new mongoose_1.Schema({
         updatedAt: 'updated',
     },
 });
-exports.Playlist = mongoose_1.default.model('ii-test-playlist', PlaylistSchema);
-exports.default = exports.Playlist;
-//# sourceMappingURL=playlist.js.map
+const Playlist = mongoose_1.default.model('ii-playlist', PlaylistSchema);
+exports.default = Playlist;
+//# sourceMappingURL=PlaylistModel.js.map

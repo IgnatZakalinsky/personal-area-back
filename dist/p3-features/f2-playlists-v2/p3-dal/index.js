@@ -19,33 +19,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Playlist = exports.COURSE = exports.PLAYLIST_TAG = void 0;
-const mongoose_1 = __importStar(require("mongoose"));
-exports.PLAYLIST_TAG = {
-    TODOLIST: 'todolist',
-};
-exports.COURSE = {
-    REACT: 'React',
-};
-// new Schema for object
-const PlaylistSchema = new mongoose_1.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    levelAccess: {
-        type: Number,
-        required: true,
-    },
-    tags: [{
-            type: String,
-        }],
-}, {
-    timestamps: {
-        createdAt: 'created',
-        updatedAt: 'updated',
-    },
-});
-exports.Playlist = mongoose_1.default.model('ii-test-playlist', PlaylistSchema);
-exports.default = exports.Playlist;
-//# sourceMappingURL=playlist.js.map
+exports.PlaylistModel = void 0;
+const BaseDAL_v2_1 = require("../../../p1-common/c5-dal/BaseDAL-v2");
+const PlaylistModel_1 = __importStar(require("../p0-models/PlaylistModel"));
+exports.PlaylistModel = new BaseDAL_v2_1.BaseDAL(PlaylistModel_1.default, 'Playlist', PlaylistModel_1.uniqueProperties);
+//# sourceMappingURL=index.js.map
