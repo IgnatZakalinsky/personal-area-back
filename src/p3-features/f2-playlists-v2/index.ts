@@ -1,5 +1,5 @@
 import express from 'express'
-import {addPlaylist} from './p1-controllers/addPlaylist';
+import {addPlaylist} from './p1-controllers'
 
 const playlists2 = express.Router()
 

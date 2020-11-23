@@ -33,4 +33,51 @@ export class BaseError {
                 : 'Check your request! /ᐠ-ꞈ-ᐟ\\',
         })
     }
+
+    static PromiseWithTry = (inTryName: string) => <A>(
+        getAnswer: () => A,
+        methodName: string,
+        more?: any
+    ) => {
+        return new Promise<A | BaseError>(async (res, rej) => {
+            try {
+                const answer = await getAnswer()
+
+                res(answer)
+            } catch (e) {
+                if (e instanceof BaseError) {
+                    rej(e)
+
+                } else {
+                    rej(new BaseError({
+                        type: 500,
+                        e,
+                        inTry: `${inTryName}${methodName}`,
+                        more,
+                    }))
+                }
+            }
+        })
+    }
+
+    static PromiseWithTryAndSend = (inTryName: string) => <A>(
+        response: Response,
+        getAnswer: () => A,
+        methodName: string,
+        more?: any
+    ) => {
+        return new Promise<A | void>(async (res) => {
+            try {
+                const answer = await BaseError.PromiseWithTry(inTryName)(getAnswer, methodName, more)
+
+                if (answer instanceof BaseError) {
+                    answer.send(response)
+                } else {
+                    res(answer)
+                }
+            } catch (e) {
+                e.send(response)
+            }
+        })
+    }
 }

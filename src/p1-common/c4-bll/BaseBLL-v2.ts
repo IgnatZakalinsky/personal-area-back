@@ -1,4 +1,5 @@
 import {BaseCreateQueryType, BaseDAL, BaseDocType} from '../c5-dal/BaseDAL-v2'
+import {BaseError} from '../c1-errors/BaseError'
 
 export class BaseBLL<T extends BaseDocType> {
     constructor(DAL: BaseDAL<T>) {
@@ -8,8 +9,23 @@ export class BaseBLL<T extends BaseDocType> {
     _DAL: BaseDAL<T>
 
     async addItem(checkedItem: BaseCreateQueryType<T>) {
+        return this.BLLPromise<T>(
+            async () => {
 
-        return this._DAL.createItem(checkedItem)
+                return this._DAL.createItem(checkedItem)
+            },
+            '.addItem',
+            {checkedItem},
+        )
+    }
+
+    BLLPromise<A>(
+        getAnswer: () => Promise<A | BaseError>,
+        methodName: string,
+        more?: any
+    ) {
+        return BaseError.PromiseWithTry(`BLL:${this._DAL.modelName}`)
+        (getAnswer, methodName, more)
     }
 }
 

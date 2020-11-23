@@ -69,9 +69,9 @@ class BaseDAL {
                             const findKey = Object.keys(find)[0];
                             throw new BaseError_1.BaseError({
                                 type: 400,
-                                inTry: this.modelName + methodName + '.checkUnique',
+                                inTry: `DAL:${this.modelName}${methodName}.checkUnique`,
                                 e: `Duplicate ${this.modelName} item property {${findKey}: ${find[findKey]}} ^._.^`,
-                                more: { checkedItem, uniqueProperties: this.uniqueProperties, find, count }
+                                more: { checkedItem, uniqueProperties: this.uniqueProperties, find, count },
                             });
                         }
                         else {
@@ -84,25 +84,7 @@ class BaseDAL {
     }
     // more
     DALPromise(getAnswer, methodName, more) {
-        return new Promise((res, rej) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const answer = yield getAnswer();
-                res(answer);
-            }
-            catch (e) {
-                if (e instanceof BaseError_1.BaseError) {
-                    rej(e);
-                }
-                else {
-                    rej(new BaseError_1.BaseError({
-                        type: 500,
-                        e,
-                        inTry: this.modelName + methodName,
-                        more,
-                    }));
-                }
-            }
-        }));
+        return BaseError_1.BaseError.PromiseWithTry(`DAL:${this.modelName}`)(getAnswer, methodName, more);
     }
 }
 exports.BaseDAL = BaseDAL;

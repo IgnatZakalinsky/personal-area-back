@@ -1,4 +1,4 @@
-import {Model, Document, CreateQuery, FilterQuery, DocumentDefinition} from 'mongoose'
+import {CreateQuery, Document, DocumentDefinition, FilterQuery, Model} from 'mongoose'
 import {BaseError} from '../c1-errors/BaseError'
 
 // типы конкретной базы данных
@@ -34,7 +34,7 @@ export class BaseDAL<T extends BaseDocType> {
     uniqueProperties?: Extract<keyof BaseCreateQueryType<T>, keyof BaseFilterQueryType<T>>[]
 
     createItem(checkedItem: BaseCreateQueryType<T>) {
-        return this.DALPromise<T, Promise<T>>(
+        return this.DALPromise<T>(
             async () => {
                 await this.checkUnique(checkedItem, '.createItem')
 
@@ -51,7 +51,7 @@ export class BaseDAL<T extends BaseDocType> {
         itemForPageCount = 1000,
         pageNumber = 1
     ) {
-        return this.DALPromise<T, Promise<T[] extends Array<any> ? BaseDocDefType<T>[] : (BaseDocDefType<T> | null)>>(
+        return this.DALPromise<T[] extends Array<any> ? BaseDocDefType<T>[] : (BaseDocDefType<T> | null)>(
             () => {
                 return this._Model.find(find)
                     .sort(sort)
@@ -66,7 +66,7 @@ export class BaseDAL<T extends BaseDocType> {
     }
 
     getItemById(id: string) {
-        return this.DALPromise<T, Promise<T | null>>(
+        return this.DALPromise<T | null>(
             () => {
                 return this._Model.findById(id)
                     .exec()
@@ -77,7 +77,7 @@ export class BaseDAL<T extends BaseDocType> {
     }
 
     countItems(find: BaseFilterQueryType<T>) {
-        return this.DALPromise<T, Promise<number>>(
+        return this.DALPromise<number>(
             () => {
                 return this._Model.count(find)
                     .exec()
@@ -88,7 +88,7 @@ export class BaseDAL<T extends BaseDocType> {
     }
 
     removeItemById(id: string) {
-        return this.DALPromise<T, Promise<T | null>>(
+        return this.DALPromise<T | null>(
             () => {
                 return this._Model.findByIdAndDelete(id)
                     .exec()
@@ -99,7 +99,7 @@ export class BaseDAL<T extends BaseDocType> {
     }
 
     updateItemById(id: string, item: BaseCreateQueryType<T>) {
-        return this.DALPromise<T, Promise<T | null>>(
+        return this.DALPromise<T | null>(
             () => {
                 return this._Model.findByIdAndUpdate(id, item, {new: true})
                     .exec()
@@ -110,7 +110,7 @@ export class BaseDAL<T extends BaseDocType> {
     }
 
     checkUnique(checkedItem: BaseCreateQueryType<T>, methodName: string) {
-        return this.DALPromise<T, void>(
+        return this.DALPromise<void>(
             async () => {
                 if (this.uniqueProperties) {
                     let find: BaseFilterQueryType<T> = {}
@@ -126,9 +126,9 @@ export class BaseDAL<T extends BaseDocType> {
 
                                 throw new BaseError({
                                     type: 400,
-                                    inTry: this.modelName + methodName + '.checkUnique',
+                                    inTry: `DAL:${this.modelName}${methodName}.checkUnique`,
                                     e: `Duplicate ${this.modelName} item property {${findKey}: ${find[findKey]}} ^._.^`,
-                                    more: {checkedItem, uniqueProperties: this.uniqueProperties, find, count}
+                                    more: {checkedItem, uniqueProperties: this.uniqueProperties, find, count},
                                 })
                             } else {
                                 find = {}
@@ -144,29 +144,12 @@ export class BaseDAL<T extends BaseDocType> {
 
     // more
 
-    DALPromise<T extends BaseDocType, A>(
-        getAnswer: () => A,
+    DALPromise<A>(
+        getAnswer: () => Promise<A>,
         methodName: string,
         more?: any
     ) {
-        return new Promise<A | BaseError>(async (res, rej) => {
-            try {
-                const answer = await getAnswer()
-
-                res(answer)
-            } catch (e) {
-                if (e instanceof BaseError) {
-                    rej(e)
-
-                } else {
-                    rej(new BaseError({
-                        type: 500,
-                        e,
-                        inTry: this.modelName + methodName,
-                        more,
-                    }))
-                }
-            }
-        })
+        return BaseError.PromiseWithTry(`DAL:${this.modelName}`)
+        (getAnswer, methodName, more)
     }
 }

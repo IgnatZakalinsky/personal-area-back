@@ -1,24 +1,62 @@
-import {Request, Response} from 'express'
 import {PlaylistLogic} from '../p2-bll'
+import {BaseController} from '../../../p1-common/c3-controllers/BaseController-v2'
+import {Request, Response} from 'express'
 import {BaseError} from '../../../p1-common/c1-errors/BaseError'
-import {BaseCreateQueryType} from "../../../p1-common/c5-dal/BaseDAL-v2";
-import {IPlaylist} from "../p0-models/PlaylistModel";
+import {PlaylistType} from '../p0-models/PlaylistModel'
+import {Validators} from '../../../p1-common/c2-validators/Validators'
 
-export const PlaylistController = {
-    async addItem(req: Request, res: Response, checkedPlaylist: BaseCreateQueryType<IPlaylist>) {
-        try {
-            const addedItem = await PlaylistLogic.addItem(checkedPlaylist)
+export const PlaylistController = new BaseController(PlaylistLogic)
 
-            res.status(201).json({['new' + PlaylistLogic._DAL.modelName]: addedItem})
-        } catch (e) {
-            if (e instanceof BaseError) {
-                e.send(res)
+export const addPlaylist = async (req: Request, res: Response) => {
+    const {playlist} = req.body
 
-            } else {
-                new BaseError({type: 500, inTry: 'addItem', e, more: {checkedPlaylist}})
-                    .send(res)
-            }
-        }
+    const inTry = 'PreController:Playlist.addPlaylist.'
+
+    if (!playlist) {
+        new BaseError({
+            type: 400,
+            e: 'No playlist in body! /ᐠ-ꞈ-ᐟ\\',
+            inTry: inTry + 'playlist',
+            more: {body: req.body},
+        })
+            .send(res)
+    } else {
+        await PlaylistController.ControllerPromise<void>(
+            res,
+            async () => {
+                const checkedPlaylist: PlaylistType = {
+                    name: Validators.string(
+                        playlist.name,
+                        'no Name',
+                        'no Name',
+                        inTry + 'checkedPlaylist[name]'
+                    ),
+                    levelAccess: Validators.number(
+                        playlist.levelAccess,
+                        100000,
+                        inTry + 'checkedPlaylist[levelAccess]'
+                    ),
+                    tags: Validators.array<[], string>(
+                        playlist.tags,
+                        [],
+                        'string',
+                        inTry + 'checkedPlaylist[tags]'
+                    ),
+                }
+
+                await PlaylistController.addItem(
+                    req,
+                    res,
+                    {
+                        ...checkedPlaylist,
+                        updated: new Date(),
+                        created: new Date(),
+                    })
+            },
+            inTry + 'checkedPlaylist',
+            {playlist},
+        )
+
 
     }
 }

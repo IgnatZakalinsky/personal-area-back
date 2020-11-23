@@ -10,14 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseBLL = void 0;
+const BaseError_1 = require("../c1-errors/BaseError");
 class BaseBLL {
     constructor(DAL) {
         this._DAL = DAL;
     }
     addItem(checkedItem) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this._DAL.createItem(checkedItem);
+            return this.BLLPromise(() => __awaiter(this, void 0, void 0, function* () {
+                return this._DAL.createItem(checkedItem);
+            }), '.addItem', { checkedItem });
         });
+    }
+    BLLPromise(getAnswer, methodName, more) {
+        return BaseError_1.BaseError.PromiseWithTry(`BLL:${this._DAL.modelName}`)(getAnswer, methodName, more);
     }
 }
 exports.BaseBLL = BaseBLL;
