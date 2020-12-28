@@ -1,4 +1,11 @@
-import {BaseCreateQueryType, BaseDAL, BaseDocType} from '../c5-dal/BaseDAL-v2'
+import {
+    BaseCreateQueryType,
+    BaseDAL,
+    BaseDocDefType,
+    BaseDocType,
+    BaseFilterQueryType,
+    BaseSortQueryType
+} from '../c5-dal/BaseDAL-v2'
 import {BaseError} from '../c1-errors/BaseError'
 
 export class BaseBLL<T extends BaseDocType> {
@@ -18,6 +25,18 @@ export class BaseBLL<T extends BaseDocType> {
             {checkedItem},
         )
     }
+
+    async getItems(find: BaseFilterQueryType<T>, sort: BaseSortQueryType<T>) {
+        return this.BLLPromise<T[] extends Array<any> ? BaseDocDefType<T>[] : (BaseDocDefType<T> | null)>(
+            async () => {
+
+                return this._DAL.readArray(find, sort)
+            },
+            '.getItems',
+            {find, sort}
+        )
+    }
+
 
     BLLPromise<A>(
         getAnswer: () => Promise<A | BaseError>,

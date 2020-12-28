@@ -1,4 +1,10 @@
-import {BaseCreateQueryType, BaseDocType} from '../c5-dal/BaseDAL-v2'
+import {
+    BaseCreateQueryType,
+    BaseDocDefType,
+    BaseDocType,
+    BaseFilterQueryType,
+    BaseSortQueryType
+} from '../c5-dal/BaseDAL-v2'
 import {BaseBLL} from '../c4-bll/BaseBLL-v2'
 import {Request, Response} from 'express'
 import {BaseError} from '../c1-errors/BaseError'
@@ -21,6 +27,20 @@ export class BaseController<T extends BaseDocType> {
         )
 
         res.status(201).json({['new' + this._BLL._DAL.modelName]: addedItem})
+    }
+
+    async getItems(req: Request, res: Response, find: BaseFilterQueryType<T>, sort: BaseSortQueryType<T>) {
+        const items = await this
+            .ControllerPromise<T[] extends Array<any> ? BaseDocDefType<T>[] : (BaseDocDefType<T> | null)>(
+            res,
+            () => {
+                return this._BLL.getItems(find, sort)
+            },
+            '.getItems',
+            {find, sort},
+        )
+
+        res.status(200).json({[this._BLL._DAL.modelName + 's']: items})
     }
 
     ControllerPromise<A>(
