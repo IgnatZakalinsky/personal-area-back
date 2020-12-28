@@ -23,6 +23,15 @@ class BaseController {
             res.status(201).json({ ['new' + this._BLL._DAL.modelName]: addedItem });
         });
     }
+    getItems(req, res, find, sort) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const items = yield this
+                .ControllerPromise(res, () => {
+                return this._BLL.getItems(find, sort);
+            }, '.getItems', { find, sort });
+            res.status(200).json({ [this._BLL._DAL.modelName + 's']: items });
+        });
+    }
     ControllerPromise(res, getAnswer, methodName, more) {
         return BaseError_1.BaseError.PromiseWithTryAndSend(`Controller:${this._BLL._DAL.modelName}`)(res, getAnswer, methodName, more);
     }

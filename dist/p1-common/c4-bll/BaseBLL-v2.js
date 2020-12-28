@@ -22,6 +22,13 @@ class BaseBLL {
             }), '.addItem', { checkedItem });
         });
     }
+    getItems(find, sort) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.BLLPromise(() => __awaiter(this, void 0, void 0, function* () {
+                return this._DAL.readArray(find, sort);
+            }), '.getItems', { find, sort });
+        });
+    }
     BLLPromise(getAnswer, methodName, more) {
         return BaseError_1.BaseError.PromiseWithTry(`BLL:${this._DAL.modelName}`)(getAnswer, methodName, more);
     }

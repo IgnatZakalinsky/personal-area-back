@@ -1,9 +1,9 @@
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import {Express} from 'express'
-// import {IS_DEVELOPER_VERSION} from '../p0-config/config'
+import {Express, Response} from 'express'
+import {IS_DEVELOPER_VERSION} from '../p0-config/config'
 
-// export const cookieSettings = IS_DEVELOPER_VERSION ? {} : {sameSite: 'none' as const, secure: true}
+export const cookieSettings = !IS_DEVELOPER_VERSION ? {} : {sameSite: 'none' as const, secure: true}
 
 export const cookie = (app: Express) => {
 
@@ -32,4 +32,10 @@ export const cookie = (app: Express) => {
 //         ...cookieSettings,
 //         expires: new Date(user.tokenDeathTime || 0),
 //     })
-// };
+// }
+export const resCookie = (res: Response, token: string) => {
+    return res.cookie('token', token, {
+        ...cookieSettings,
+        expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7)),
+    })
+}

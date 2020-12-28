@@ -8,20 +8,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logIn = void 0;
+exports.logIn = exports.instance = void 0;
+const axios_1 = __importDefault(require("axios"));
 const errors_1 = require("../../../p1-common/c1-errors/errors");
+const cookie_1 = require("../../../p2-main/cookie");
+exports.instance = axios_1.default.create({
+    baseURL: 'https://labs-api.staging.it-kamasutra.com/',
+    headers: { 'FRIEND-KEY': process.env.FRIEND_KEY }
+});
 exports.logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // off
-    if (req.body.token) {
-        if (req.body.token.charAt(1) === "4")
-            errors_1.status400(res, "test 400", "login");
-        else if (req.body.token.charAt(1) === "5")
-            errors_1.status500(res, { message: "test 500" }, "login");
-        else
-            res.status(200).json({ token: "ok" });
+    const { token } = req.body;
+    if (token) {
+        try {
+            const p = yield exports.instance.post('api/friends/auth/login', { tempPassword: token });
+            console.log('ok: ', Object.assign({}, p.data));
+            if (p.data.resultCode === 1) {
+                errors_1.status400(res, p.data.messages[0], "login");
+            }
+            else {
+                cookie_1.resCookie(res, p.data.data.token).status(200).json(p.data.data);
+            }
+        }
+        catch (e) {
+            console.log('error: ', Object.assign({}, e));
+            errors_1.status500(res, Object.assign({}, e), "login", { token });
+        }
     }
     else
-        res.status(200).json({ test: "ok" });
+        errors_1.status400(res, "no token in body!", "login", { body: req.body });
 });
 //# sourceMappingURL=logIn.js.map
