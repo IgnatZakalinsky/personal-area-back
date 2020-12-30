@@ -26,7 +26,7 @@ exports.logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 const p = yield config_1.instance.post('api/friends/auth/login', { tempPassword: token });
                 console.log('ok: ', Object.assign({}, p.data));
                 if (p.data.resultCode === 1) {
-                    errors_1.status400(res, p.data.messages[0], "login");
+                    errors_1.status400(res, 'login password not valid!', "login", { errors: p.data.messages });
                 }
                 else {
                     cookie_1.resCookie(res, p.data.data.token, p.data.data.token + '+' + Date.now() + (1000 * 60 * 60 * 24 * 7))
