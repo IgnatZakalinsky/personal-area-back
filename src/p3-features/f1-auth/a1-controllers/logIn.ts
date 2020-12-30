@@ -21,7 +21,7 @@ export const logIn = async (req: Request, res: Response) => {
                 console.log('ok: ', {...p.data})
 
                 if (p.data.resultCode === 1) {
-                    status400(res, p.data.messages[0], "login")
+                    status400(res, 'login password not valid!', "login", {errors: p.data.messages})
                 } else {
                     resCookie(res, p.data.data.token,
                         p.data.data.token + '+' + Date.now() + (1000 * 60 * 60 * 24 * 7))
