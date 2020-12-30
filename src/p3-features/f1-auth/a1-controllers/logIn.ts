@@ -8,24 +8,31 @@ export const instance = axios.create({
     headers: {'FRIEND-KEY': process.env.FRIEND_KEY}
 })
 
+export const ADMIN_PASS = process.env.ADMIN_PASS || 'xxx'
+
 export const logIn = async (req: Request, res: Response) => {
     const {token} = req.body
     if (token) {
-        try {
-            const p = await instance.post(
-                'api/friends/auth/login',
-                {tempPassword: token}
-            )
-            console.log('ok: ', {...p.data})
 
-            if (p.data.resultCode === 1) {
-                status400(res, p.data.messages[0], "login")
-            } else {
-                resCookie(res, p.data.data.token).status(200).json(p.data.data)
+        if (token === ADMIN_PASS) {
+            resCookie(res, ADMIN_PASS).status(200).json({ok: true})
+        } else {
+            try {
+                const p = await instance.post(
+                    'api/friends/auth/login',
+                    {tempPassword: token}
+                )
+                console.log('ok: ', {...p.data})
+
+                if (p.data.resultCode === 1) {
+                    status400(res, p.data.messages[0], "login")
+                } else {
+                    resCookie(res, p.data.data.token).status(200).json(p.data.data)
+                }
+            } catch (e) {
+                console.log('error: ', {...e})
+                status500(res, {...e}, "login", {token})
             }
-        } catch (e) {
-            console.log('error: ', {...e})
-            status500(res, {...e}, "login", {token})
         }
     } else status400(res, "no token in body!", "login", {body: req.body})
 };
