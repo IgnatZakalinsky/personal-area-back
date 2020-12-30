@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser'
 import {Express, Response} from 'express'
 import {IS_DEVELOPER_VERSION} from '../p0-config/config'
 
-export const cookieSettings = !IS_DEVELOPER_VERSION ? {} : {sameSite: 'none' as const, secure: true}
+export const cookieSettings = IS_DEVELOPER_VERSION ? {} : {sameSite: 'none' as const, secure: true}
 
 export const cookie = (app: Express) => {
 
@@ -33,9 +33,15 @@ export const cookie = (app: Express) => {
 //         expires: new Date(user.tokenDeathTime || 0),
 //     })
 // }
-export const resCookie = (res: Response, token: string) => {
+export const resCookie = (res: Response, token: string, deviceToken: string) => {
+    const dToken = deviceToken.slice(0, 36)
+    const deadTime = deviceToken.slice(37)
+
     return res.cookie('token', token, {
         ...cookieSettings,
         expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7)),
+    }).cookie('deviceToken', dToken, {
+        ...cookieSettings,
+        expires: new Date(deadTime),
     })
 }

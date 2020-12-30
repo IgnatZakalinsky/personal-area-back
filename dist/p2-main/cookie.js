@@ -7,7 +7,7 @@ exports.resCookie = exports.cookie = exports.cookieSettings = void 0;
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const config_1 = require("../p0-config/config");
-exports.cookieSettings = !config_1.IS_DEVELOPER_VERSION ? {} : { sameSite: 'none', secure: true };
+exports.cookieSettings = config_1.IS_DEVELOPER_VERSION ? {} : { sameSite: 'none', secure: true };
 exports.cookie = (app) => {
     // const whitelist = ['http://localhost:3000', 'http://example2.com']
     const corsOptions = {
@@ -30,7 +30,9 @@ exports.cookie = (app) => {
 //         expires: new Date(user.tokenDeathTime || 0),
 //     })
 // }
-exports.resCookie = (res, token) => {
-    return res.cookie('token', token, Object.assign(Object.assign({}, exports.cookieSettings), { expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7)) }));
+exports.resCookie = (res, token, deviceToken) => {
+    const dToken = deviceToken.slice(0, 36);
+    const deadTime = deviceToken.slice(37);
+    return res.cookie('token', token, Object.assign(Object.assign({}, exports.cookieSettings), { expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7)) })).cookie('deviceToken', dToken, Object.assign(Object.assign({}, exports.cookieSettings), { expires: new Date(deadTime) }));
 };
 //# sourceMappingURL=cookie.js.map

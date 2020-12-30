@@ -1,12 +1,7 @@
 import {Request, Response} from 'express'
-import axios from 'axios'
 import {status400, status500} from '../../../p1-common/c1-errors/errors'
 import {resCookie} from '../../../p2-main/cookie'
-
-export const instance = axios.create({
-    baseURL: 'https://labs-api.staging.it-kamasutra.com/',
-    headers: {'FRIEND-KEY': process.env.FRIEND_KEY}
-})
+import {instance} from '../../../p0-config/config'
 
 export const ADMIN_PASS = process.env.ADMIN_PASS || 'xxx'
 
@@ -15,7 +10,8 @@ export const logIn = async (req: Request, res: Response) => {
     if (token) {
 
         if (token === ADMIN_PASS) {
-            resCookie(res, ADMIN_PASS).status(200).json({ok: true})
+            resCookie(res, ADMIN_PASS, ADMIN_PASS + '+' + Date.now() + (1000 * 60 * 60 * 24 * 7))
+                .status(200).json({login: true})
         } else {
             try {
                 const p = await instance.post(
@@ -27,7 +23,9 @@ export const logIn = async (req: Request, res: Response) => {
                 if (p.data.resultCode === 1) {
                     status400(res, p.data.messages[0], "login")
                 } else {
-                    resCookie(res, p.data.data.token).status(200).json(p.data.data)
+                    resCookie(res, p.data.data.token,
+                        p.data.data.token + '+' + Date.now() + (1000 * 60 * 60 * 24 * 7))
+                        .status(200).json({login: true})
                 }
             } catch (e) {
                 console.log('error: ', {...e})
